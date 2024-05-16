@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "ai-toy-box"
+version = "0.1.0"
+description = ""
+authors = ["ShotaTotsuka <shota.totsuka@blueish.co.jp>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+gradio = "^4.31.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
