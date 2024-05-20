@@ -1,2 +1,2 @@
 run:
-	poetry run python3 -m main.py
+	poetry run streamlit run app.py
