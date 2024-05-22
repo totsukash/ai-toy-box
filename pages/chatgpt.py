@@ -1,30 +1,47 @@
 import streamlit as st
+from openai import OpenAI
+import dotenv
+import os
+
+dotenv.load_dotenv()
+
+openai_api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=openai_api_key)
 
 st.title("Echo Bot")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# React to user input
-if prompt := st.chat_input("What is up?"):
-    # Display user message in chat message container
-    st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
+if content := st.chat_input("入力してください"):
+    st.chat_message("user").markdown(content)
     st.session_state.messages.append({
         "role": "user",
-        "content": prompt,
+        "content": content,
     })
 
-    response = f"Echo: {prompt}"
-    # Display assistant response in chat message container
+    # 過去5つのメッセージを含める
+    past_messages = st.session_state.messages[-5:]
+    print(f"過去のメッセージ: {past_messages}")
+
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "あなたは有能なアシスタントです"},
+            *past_messages,
+            {"role": "user", "content": content},
+        ]
+    )
+
+    response = completion.choices[0].message.content
+
     with st.chat_message("assistant"):
         st.markdown(response)
-    # Add assistant response to chat history
+
     st.session_state.messages.append({
         "role": "assistant",
         "content": response,
