@@ -38,7 +38,6 @@ if content := st.chat_input("入力してください"):
         messages=[
             {"role": "system", "content": "あなたは有能なアシスタントです"},
             *past_messages,
-            {"role": "user", "content": content},
         ]
     )
 
