@@ -8,7 +8,13 @@ dotenv.load_dotenv()
 openai_api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=openai_api_key)
 
-st.title("Echo Bot")
+with st.sidebar:
+    model = st.selectbox("モデルを選択してください", [
+        "gpt-4-turbo",
+        "gpt-3.5-turbo",
+    ])
+
+st.title("OpenAI Chatbot")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -24,12 +30,11 @@ if content := st.chat_input("入力してください"):
         "content": content,
     })
 
-    # 過去5つのメッセージを含める
-    past_messages = st.session_state.messages[-5:]
-    print(f"過去のメッセージ: {past_messages}")
+    # 過去6個のメッセージを含める
+    past_messages = st.session_state.messages[-6:]
 
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model,
         messages=[
             {"role": "system", "content": "あなたは有能なアシスタントです"},
             *past_messages,
